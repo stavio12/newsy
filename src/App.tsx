@@ -23,32 +23,40 @@ const App: React.FC = () => {
       //set data into state
       dispatch({ type: "ALL-NEWS", payload: data });
     } else {
-      axios
-        .get(
-          `http://api.nytimes.com/svc/mostpopular/v2/mostviewed/all-sections/${state.queryID}.json?api-key=0sKNTnLGyPghpibXDIayDogYuuk7BiTw`
-        )
-        .then(async (response) => {
-          const news = await response.data.results;
-          let newNewsData: NewsType[] = [];
-
-          news.map((newsData: any) => {
-            console.log(newsData);
-            return newNewsData.push({
-              title: newsData.title,
-              id: newsData.id,
-              abstract: newsData.abstract,
-              metaData: newsData.media[0],
-              published_date: newsData.published_date,
-            });
-          });
-          //Set data into local storage
-          localStorage.setItem("news", JSON.stringify(newNewsData));
-
-          //set data into state
-          dispatch({ type: "ALL-NEWS", payload: newNewsData });
-        });
+      getNewsData(state.queryID);
     }
-  }, []);
+
+    if (state.queryID >= 1) {
+      getNewsData(state.queryID);
+    }
+  }, [state.queryID]);
+
+  const getNewsData = (id: number) => {
+    console.log(id);
+    axios
+      .get(
+        `http://api.nytimes.com/svc/mostpopular/v2/mostviewed/all-sections/${id}.json?api-key=0sKNTnLGyPghpibXDIayDogYuuk7BiTw`
+      )
+      .then(async (response) => {
+        const news = await response.data.results;
+        let newNewsData: NewsType[] = [];
+
+        news.map((newsData: any) => {
+          return newNewsData.push({
+            title: newsData.title,
+            id: newsData.id,
+            abstract: newsData.abstract,
+            metaData: newsData.media[0],
+            published_date: newsData.published_date,
+          });
+        });
+        //Set data into local storage
+        localStorage.setItem("news", JSON.stringify(newNewsData));
+
+        //set data into state
+        dispatch({ type: "ALL-NEWS", payload: newNewsData });
+      });
+  };
 
   return (
     <>
@@ -60,7 +68,6 @@ const App: React.FC = () => {
               <Route path="/" element={<Home />} />
               <Route path="/all-stories" element={<News />} />
             </Routes>
-            {/* <Footer /> */}
           </div>
         </DispatchContext.Provider>
       </StateContext.Provider>
