@@ -11,7 +11,6 @@ export interface NewsType {
 
 export interface StateType {
   queryID: 1;
-
   News: NewsType;
 }
 

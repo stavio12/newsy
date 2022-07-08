@@ -16,7 +16,7 @@ function TopStory(props: { topStory: NewsType }) {
             {props.topStory.published_date}
           </small>
           <Link
-            to="love/olo/1/"
+            to={`${props.topStory.id}`}
             className="h6 text-truncate d-block w-75 text-dark text-decoration-none"
           >
             {props.topStory.title}

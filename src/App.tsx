@@ -6,8 +6,8 @@ import DispatchContext from "./DispatchContext";
 import StateContext from "./StateContext";
 import Nav from "./Nav";
 import Home from "component/Home";
-import News from "component/News";
 import axios from "axios";
+import ViewNews from "component/News/ViewNews";
 
 const App: React.FC = () => {
   const [state, dispatch] = useReducer(reducer, initialState);
@@ -66,7 +66,7 @@ const App: React.FC = () => {
           <div className="container position-relative pt-5">
             <Routes>
               <Route path="/" element={<Home />} />
-              <Route path="/all-stories" element={<News />} />
+              <Route path="/:id/" element={<ViewNews />} />
             </Routes>
           </div>
         </DispatchContext.Provider>
