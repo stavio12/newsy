@@ -4,7 +4,7 @@ export interface Action<T> {
 export interface NewsType {
   title: string | undefined;
   id: number | null;
-  abstract: string | null;
+  abstract: string;
   metaData: any | null;
   published_date: string | null;
 }
@@ -12,15 +12,22 @@ export interface NewsType {
 export interface StateType {
   queryID: 1;
   News: NewsType;
+  viewNews: NewsType;
 }
 
 export const initialState: StateType = {
   queryID: 1,
-
   News: {
     title: undefined,
     id: null,
-    abstract: null,
+    abstract: "",
+    metaData: null,
+    published_date: null,
+  },
+  viewNews: {
+    title: undefined,
+    id: null,
+    abstract: "",
     metaData: null,
     published_date: null,
   },
@@ -30,6 +37,7 @@ export interface StateAction extends Action<"ALL-NEWS" | "QUERY-ID"> {
   payload: {
     queryID: 1;
     News: NewsType;
+    viewNews: NewsType;
   };
 }
 
@@ -43,7 +51,8 @@ export const reducer = (
       return { ...state, News: action.payload };
     case "QUERY-ID":
       return { ...state, queryID: action.payload };
-
+    case "GET-NEWS":
+      return { ...state, viewNews: action.payload };
     default:
       return state;
   }

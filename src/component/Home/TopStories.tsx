@@ -15,7 +15,6 @@ function TopStories() {
     if (appState.News.length >= 1) {
       setNewsData(appState.News);
     }
-    console.log(appState.News);
   }, [appState.News, newsData]);
 
   return (

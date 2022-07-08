@@ -8,6 +8,7 @@ import Nav from "./Nav";
 import Home from "component/Home";
 import axios from "axios";
 import ViewNews from "component/News/ViewNews";
+import EditNews from "component/News/EditNews";
 
 const App: React.FC = () => {
   const [state, dispatch] = useReducer(reducer, initialState);
@@ -69,6 +70,7 @@ const App: React.FC = () => {
               <Route path="/:id/" element={<ViewNews />} />
             </Routes>
           </div>
+          <EditNews />
         </DispatchContext.Provider>
       </StateContext.Provider>
     </>

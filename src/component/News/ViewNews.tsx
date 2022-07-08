@@ -1,9 +1,11 @@
 import React, { useContext, useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import StateContext from "StateContext";
+import DispatchContext from "DispatchContext";
 import { NewsType } from "../../utils/reducers-state";
 function ViewNews() {
   const appState = useContext(StateContext);
+  const appDispatch = useContext(DispatchContext);
   const { id } = useParams();
   const [viewNews, setViewNews] = useState<NewsType>();
 
@@ -18,11 +20,36 @@ function ViewNews() {
     }
   }, [appState.News, id]);
 
+  const fireEditDelete = (id: number, type: string) => {
+    if (type === "edit") {
+      appDispatch({ type: "GET-NEWS", payload: viewNews });
+    } else {
+      console.log("delete me");
+    }
+  };
+
   return (
     <>
       <div>
         <h1>{viewNews?.title}</h1>
         <p>{viewNews?.abstract}</p>
+
+        <div className="col-8 d-flex gap-3 mx-auto">
+          <button
+            onClick={(e) => fireEditDelete(Number(id), "edit")}
+            className="btn btn-primary"
+            data-bs-toggle="modal"
+            data-bs-target="#exampleModal"
+          >
+            Edit
+          </button>
+          <button
+            onClick={(e) => fireEditDelete(Number(id), "delete")}
+            className="btn btn-danger"
+          >
+            Delete
+          </button>
+        </div>
       </div>{" "}
     </>
   );
