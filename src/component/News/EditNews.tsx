@@ -2,6 +2,7 @@ import React, { useContext, useEffect, useState } from "react";
 import StateContext from "StateContext";
 import DispatchContext from "DispatchContext";
 import { NewsType } from "../../utils/reducers-state";
+import { Toast } from "utils/functions";
 
 function EditNews() {
   const appState = useContext(StateContext);
@@ -15,14 +16,27 @@ function EditNews() {
 
   const Submit = (e: any) => {
     e.preventDefault();
+
+    //find index number of news from array
     const newIndex = appState.News.indexOf(appState.viewNews);
+
+    //update news object with new data
     const editedNews = (appState.News[Number(`${newIndex}`)] = news);
+
+    //dispatch new data to state
     appDispatch({ type: "ALL-NEWS", payload: appState.News });
     appDispatch({ type: "GET-NEWS", payload: editedNews });
 
+    //store in localStorage
     localStorage.setItem("news", JSON.stringify(appState.News));
+
     // @ts-expect-error
     $("#exampleModal").modal("hide");
+
+    Toast.fire({
+      text: "News Updated successfully",
+      icon: "success",
+    });
   };
 
   return (

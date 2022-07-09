@@ -3,6 +3,7 @@ import { useParams } from "react-router-dom";
 import StateContext from "StateContext";
 import DispatchContext from "DispatchContext";
 import { NewsType } from "../../utils/reducers-state";
+
 function ViewNews() {
   const appState = useContext(StateContext);
   const appDispatch = useContext(DispatchContext);
@@ -21,15 +22,23 @@ function ViewNews() {
   }, [appState, id]);
 
   const fireEditDelete = (id: number, type: string) => {
+    //check if type is edit or delete
     if (type === "edit") {
+      //dispatch data
       appDispatch({ type: "GET-NEWS", payload: viewNews });
     } else {
+      //remove object(news) from array
       const deletedNews: any[] = appState.News.filter(
         (newsItem: NewsType) => newsItem.id !== id
       );
 
+      //dispatch new data into state
       appDispatch({ type: "ALL-NEWS", payload: deletedNews });
+
+      //store in localStorage
       localStorage.setItem("news", JSON.stringify(deletedNews));
+
+      //navigate to home page
       window.location.href = "/";
     }
   };

@@ -12,8 +12,6 @@ import EditNews from "component/News/EditNews";
 
 const App: React.FC = () => {
   const [state, dispatch] = useReducer(reducer, initialState);
-  // const [topStories, setTopStories] = useState< []>([]);
-  // const [id, setId] = useState(1);
 
   useEffect(() => {
     //check if session has storage
@@ -27,9 +25,9 @@ const App: React.FC = () => {
       getNewsData(state.queryID);
     }
 
-    // if (state.queryID >= 1) {
-    //   getNewsData(state.queryID);
-    // }
+    if (state.queryID >= 1) {
+      getNewsData(state.queryID);
+    }
   }, [state.queryID]);
 
   const getNewsData = (id: number) => {
