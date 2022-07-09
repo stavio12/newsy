@@ -7,17 +7,22 @@ function EditNews() {
   const appState = useContext(StateContext);
   const appDispatch = useContext(DispatchContext);
 
-  const [editedNews, setEditedNews] = useState<NewsType | any>();
+  const [news, setNews] = useState<NewsType | any>();
 
   useEffect(() => {
-    setEditedNews(appState.viewNews);
-    console.log(editedNews);
+    setNews(appState.viewNews);
   }, [appState.viewNews]);
 
   const Submit = (e: any) => {
     e.preventDefault();
+    const newIndex = appState.News.indexOf(appState.viewNews);
+    const editedNews = (appState.News[Number(`${newIndex}`)] = news);
+    appDispatch({ type: "ALL-NEWS", payload: appState.News });
+    appDispatch({ type: "GET-NEWS", payload: editedNews });
 
-    // appDispatch({})
+    localStorage.setItem("news", JSON.stringify(appState.News));
+    // @ts-expect-error
+    $("#exampleModal").modal("hide");
   };
 
   return (
@@ -55,10 +60,8 @@ function EditNews() {
                   type="text"
                   className="form-control"
                   id="exampleFormControlInput1"
-                  value={editedNews?.title}
-                  onChange={(e) =>
-                    setEditedNews({ ...editedNews, title: e.target.value })
-                  }
+                  value={news?.title}
+                  onChange={(e) => setNews({ ...news, title: e.target.value })}
                 />
               </div>
               <div className="mb-3">
@@ -72,9 +75,9 @@ function EditNews() {
                   className="form-control"
                   id="exampleFormControlTextarea1"
                   rows={3}
-                  value={editedNews?.abstract}
+                  value={news?.abstract}
                   onChange={(e) =>
-                    setEditedNews({ ...editedNews, abstract: e.target.value })
+                    setNews({ ...news, abstract: e.target.value })
                   }
                 />
               </div>

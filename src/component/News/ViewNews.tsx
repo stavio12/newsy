@@ -18,13 +18,19 @@ function ViewNews() {
         }
       });
     }
-  }, [appState.News, id]);
+  }, [appState, id]);
 
   const fireEditDelete = (id: number, type: string) => {
     if (type === "edit") {
       appDispatch({ type: "GET-NEWS", payload: viewNews });
     } else {
-      console.log("delete me");
+      const deletedNews: any[] = appState.News.filter(
+        (newsItem: NewsType) => newsItem.id !== id
+      );
+
+      appDispatch({ type: "ALL-NEWS", payload: deletedNews });
+      localStorage.setItem("news", JSON.stringify(deletedNews));
+      window.location.href = "/";
     }
   };
 

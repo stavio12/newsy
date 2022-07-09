@@ -20,20 +20,19 @@ const App: React.FC = () => {
     if (localStorage.getItem("news")) {
       // @ts-expect-error
       const data: any = JSON.parse(localStorage.getItem("news"));
-
+      console.log(data);
       //set data into state
       dispatch({ type: "ALL-NEWS", payload: data });
     } else {
       getNewsData(state.queryID);
     }
 
-    if (state.queryID >= 1) {
-      getNewsData(state.queryID);
-    }
+    // if (state.queryID >= 1) {
+    //   getNewsData(state.queryID);
+    // }
   }, [state.queryID]);
 
   const getNewsData = (id: number) => {
-    console.log(id);
     axios
       .get(
         `http://api.nytimes.com/svc/mostpopular/v2/mostviewed/all-sections/${id}.json?api-key=0sKNTnLGyPghpibXDIayDogYuuk7BiTw`
