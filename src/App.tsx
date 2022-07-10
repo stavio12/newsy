@@ -38,7 +38,7 @@ const App: React.FC = () => {
   const getNewsData = (id: number) => {
     axios
       .get(
-        `http://api.nytimes.com/svc/mostpopular/v2/mostviewed/all-sections/${id}.json?api-key=${process.env.REACT_APP_API_KEY}`
+        `https://api.nytimes.com/svc/mostpopular/v2/mostviewed/all-sections/${id}.json?api-key=${process.env.REACT_APP_API_KEY}`
       )
       .then(async (response) => {
         const news = await response.data.results;
