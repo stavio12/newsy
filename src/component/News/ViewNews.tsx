@@ -56,7 +56,7 @@ function ViewNews() {
           className="img-fluid"
           style={{ width: "700px", height: "400px" }}
         />
-        <h1>{viewNews?.title}</h1>
+        <h1 className="pt-3">{viewNews?.title}</h1>
         <p>{viewNews?.abstract}</p>
 
         <div

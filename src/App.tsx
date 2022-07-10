@@ -12,6 +12,7 @@ import EditNews from "component/News/EditNews";
 
 const App: React.FC = () => {
   const [state, dispatch] = useReducer(reducer, initialState);
+  const [id, setID] = useState(1);
 
   useEffect(() => {
     //check if localStorage has data
@@ -25,10 +26,11 @@ const App: React.FC = () => {
       getNewsData(state.queryID);
     }
 
-    // if (state.queryID >= 1) {
-    //   getNewsData(state.queryID);
-    // }
-  }, [state.queryID]);
+    if (state.queryID !== id) {
+      getNewsData(state.queryID);
+      setID(state.queryID);
+    }
+  }, [state.queryID, id]);
 
   const getNewsData = (id: number) => {
     axios

@@ -30,8 +30,7 @@ function TopStories() {
               <Link to={`${id}`} className="text-white">
                 <img
                   src={
-                    // @ts-expect-error
-                    metaData["media-metadata"][2].url
+                    metaData
                       ? // @ts-expect-error
                         metaData["media-metadata"][2].url
                       : "https://bitsofco.de/content/images/2018/12/broken-1.png"
@@ -66,7 +65,11 @@ function TopStories() {
             {pagination.map((paginate) => (
               <li
                 key={paginate}
-                className="page-item"
+                className={
+                  appState.queryID === paginate
+                    ? "page-item active"
+                    : "page-item"
+                }
                 onClick={(e) =>
                   appDispatch({ type: "QUERY-ID", payload: paginate })
                 }
