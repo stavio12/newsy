@@ -21,6 +21,15 @@ function TopStories() {
     }
   }, [appState.News, appState.loader]);
 
+  const activatePaginate = (id: number) => {
+    //Clear storage and make way for new set of data
+    localStorage.removeItem("news");
+    //activate loader
+    appDispatch({ type: "LOADER", payload: true });
+    //dispatch id
+    appDispatch({ type: "QUERY-ID", payload: id });
+  };
+
   return (
     <>
       <h1 className="text-start pb-3">Top Stories</h1>
@@ -74,9 +83,7 @@ function TopStories() {
                       ? "page-item active"
                       : "page-item"
                   }
-                  onClick={(e) =>
-                    appDispatch({ type: "QUERY-ID", payload: paginate })
-                  }
+                  onClick={(e) => activatePaginate(paginate)}
                 >
                   <p className="page-link">{paginate}</p>
                 </li>
