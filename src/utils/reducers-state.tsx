@@ -9,10 +9,11 @@ export interface NewsType {
   published_date: string | null;
 }
 
-export interface StateType {
-  queryID: 1;
+interface StateType {
+  queryID: number;
   News: NewsType;
   viewNews: NewsType;
+  loader: boolean;
 }
 
 export const initialState: StateType = {
@@ -31,6 +32,7 @@ export const initialState: StateType = {
     metaData: null,
     published_date: null,
   },
+  loader: true,
 };
 
 export interface StateAction extends Action<"ALL-NEWS" | "QUERY-ID"> {
@@ -38,6 +40,7 @@ export interface StateAction extends Action<"ALL-NEWS" | "QUERY-ID"> {
     queryID: 1;
     News: NewsType;
     viewNews: NewsType;
+    loader: true;
   };
 }
 
@@ -53,6 +56,8 @@ export const reducer = (
       return { ...state, queryID: action.payload };
     case "GET-NEWS":
       return { ...state, viewNews: action.payload };
+    case "LOADER":
+      return { ...state, loader: action.payload };
     default:
       return state;
   }

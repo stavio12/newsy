@@ -20,12 +20,15 @@ const App: React.FC = () => {
       // @ts-expect-error
       const data: any = JSON.parse(localStorage.getItem("news"));
 
+      dispatch({ type: "LOADER", payload: false });
+
       //set data into state
       dispatch({ type: "ALL-NEWS", payload: data });
     } else {
       getNewsData(state.queryID);
     }
 
+    //if state id is not equal to current id call news api function
     if (state.queryID !== id) {
       getNewsData(state.queryID);
       setID(state.queryID);
@@ -35,7 +38,7 @@ const App: React.FC = () => {
   const getNewsData = (id: number) => {
     axios
       .get(
-        `http://api.nytimes.com/svc/mostpopular/v2/mostviewed/all-sections/${id}.json?api-key=0sKNTnLGyPghpibXDIayDogYuuk7BiTw`
+        `http://api.nytimes.com/svc/mostpopular/v2/mostviewed/all-sections/${id}.json?api-key=${process.env.REACT_APP_API_KEY}`
       )
       .then(async (response) => {
         const news = await response.data.results;
@@ -50,6 +53,9 @@ const App: React.FC = () => {
             published_date: newsData.published_date,
           });
         });
+
+        dispatch({ type: "LOADER", payload: false });
+
         //Set data into local storage
         localStorage.setItem("news", JSON.stringify(newNewsData));
 
