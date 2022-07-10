@@ -3,40 +3,54 @@ import TopStory from "./TopStory";
 import StateContext from "StateContext";
 import { NewsType } from "utils/reducers-state";
 import DispatchContext from "DispatchContext";
+import { Link } from "react-router-dom";
 
 function TopStories() {
   const appState = useContext(StateContext);
   const appDispatch = useContext(DispatchContext);
-  const [newsData, setNewsData] = useState([]);
+  const [firstTwoNews, setFirstTwoNews] = useState([]);
+  const [allNews, setAllNews] = useState([]);
 
   const pagination = [1, 7, 30];
 
   useEffect(() => {
     if (appState.News.length >= 1) {
-      setNewsData(appState.News);
+      setFirstTwoNews(appState.News.slice(0, 2));
+      setAllNews(appState.News.slice(2));
     }
-  }, [appState.News, newsData]);
+  }, [appState.News]);
 
   return (
     <>
       <div className="row mx-auto text-center">
-        <h1>Top Stories</h1>
-        <div className="col-6">
-          <img
-            src="https://via.placeholder.com/700x400"
-            alt=""
-            className="img-fluid"
-          />
-        </div>
-        <div className="col-6">
-          <img
-            src="https://via.placeholder.com/700x400"
-            alt=""
-            className="img-fluid"
-          />
-        </div>
+        <h1 className="text-start pb-3">Top Stories</h1>
+        {firstTwoNews.map(({ title, published_date, id, metaData }) => (
+          <div className="col-md-6 pt-3" key={id}>
+            <div className="position-relative news-main-bg">
+              <Link to={`${id}`} className="text-white">
+                <img
+                  src={
+                    // @ts-expect-error
+                    metaData["media-metadata"][2].url
+                      ? // @ts-expect-error
+                        metaData["media-metadata"][2].url
+                      : "https://bitsofco.de/content/images/2018/12/broken-1.png"
+                  }
+                  alt="news-img"
+                  className="img-fluid"
+                  style={{ width: "700px", height: "400px" }}
+                />
+                <div className="position-absolute bottom-0 w-100 news-bg">
+                  <h1>{title}</h1>
+                  <small>{published_date}</small>
+                </div>
+              </Link>
+            </div>
+          </div>
+        ))}
+
         <div className="row pt-5">
-          {newsData.map((news: NewsType) => (
+          {allNews.map((news: NewsType) => (
             <TopStory topStory={news} key={news.id} />
           ))}
         </div>

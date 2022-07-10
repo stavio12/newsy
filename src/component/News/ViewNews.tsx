@@ -45,14 +45,27 @@ function ViewNews() {
 
   return (
     <>
-      <div>
+      <div className="col-8 text-center mx-auto">
+        <img
+          src={
+            viewNews?.metaData
+              ? viewNews?.metaData["media-metadata"][2].url
+              : "https://bitsofco.de/content/images/2018/12/broken-1.png"
+          }
+          alt="news-img"
+          className="img-fluid"
+          style={{ width: "700px", height: "400px" }}
+        />
         <h1>{viewNews?.title}</h1>
         <p>{viewNews?.abstract}</p>
 
-        <div className="col-8 d-flex gap-3 mx-auto">
+        <div
+          className="d-flex justify-content-center
+        pt-5 gap-3 mx-auto"
+        >
           <button
             onClick={(e) => fireEditDelete(Number(id), "edit")}
-            className="btn btn-primary"
+            className="btn px-5 btn-warning"
             data-bs-toggle="modal"
             data-bs-target="#exampleModal"
           >
@@ -60,7 +73,7 @@ function ViewNews() {
           </button>
           <button
             onClick={(e) => fireEditDelete(Number(id), "delete")}
-            className="btn btn-danger"
+            className="btn px-5 btn-danger"
           >
             Delete
           </button>

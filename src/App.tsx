@@ -14,20 +14,20 @@ const App: React.FC = () => {
   const [state, dispatch] = useReducer(reducer, initialState);
 
   useEffect(() => {
-    //check if session has storage
+    //check if localStorage has data
     if (localStorage.getItem("news")) {
       // @ts-expect-error
       const data: any = JSON.parse(localStorage.getItem("news"));
-      console.log(data);
+
       //set data into state
       dispatch({ type: "ALL-NEWS", payload: data });
     } else {
       getNewsData(state.queryID);
     }
 
-    if (state.queryID >= 1) {
-      getNewsData(state.queryID);
-    }
+    // if (state.queryID >= 1) {
+    //   getNewsData(state.queryID);
+    // }
   }, [state.queryID]);
 
   const getNewsData = (id: number) => {
