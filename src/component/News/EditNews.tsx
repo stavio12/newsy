@@ -76,6 +76,7 @@ function EditNews() {
                   id="exampleFormControlInput1"
                   value={news?.title}
                   onChange={(e) => setNews({ ...news, title: e.target.value })}
+                  required
                 />
               </div>
               <div className="mb-3">
@@ -93,6 +94,7 @@ function EditNews() {
                   onChange={(e) =>
                     setNews({ ...news, abstract: e.target.value })
                   }
+                  required
                 />
               </div>
             </div>
