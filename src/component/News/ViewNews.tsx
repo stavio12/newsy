@@ -1,39 +1,44 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
+import { useSelector, useDispatch } from "react-redux";
 import { useParams } from "react-router-dom";
-import StateContext from "StateContext";
-import DispatchContext from "DispatchContext";
+
 import { NewsType } from "../../utils/reducers-state";
+import { actionCreators } from "../../state/index";
+import { bindActionCreators } from "redux";
 
 function ViewNews() {
-  const appState = useContext(StateContext);
-  const appDispatch = useContext(DispatchContext);
+  const dispatch = useDispatch();
+  const state = useSelector((state: any) => state.news);
+  const { getNews, getAllNews } = bindActionCreators(actionCreators, dispatch);
   const { id } = useParams();
   const [viewNews, setViewNews] = useState<NewsType>();
 
   useEffect(() => {
-    if (id && appState.News.length > 1) {
+    if (id && state.News.length > 1) {
       // eslint-disable-next-line array-callback-return
-      appState.News.filter((news: NewsType) => {
+      state.News.filter((news: NewsType) => {
         if (news.id === Number(id)) {
           setViewNews(news);
         }
       });
     }
-  }, [appState, id]);
+  }, [state.News, id, state.viewNews]);
 
   const fireEditDelete = (id: number, type: string) => {
     //check if type is edit or delete
     if (type === "edit") {
       //dispatch data
-      appDispatch({ type: "GET-NEWS", payload: viewNews });
+      // @ts-expect-error
+      getNews(viewNews);
     } else {
       //remove object(news) from array
-      const deletedNews: any[] = appState.News.filter(
+      const deletedNews: any[] = state.News.filter(
         (newsItem: NewsType) => newsItem.id !== id
       );
 
       //dispatch new data into state
-      appDispatch({ type: "ALL-NEWS", payload: deletedNews });
+      // @ts-expect-error
+      getAllNews(deletedNews);
 
       //store in localStorage
       localStorage.setItem("news", JSON.stringify(deletedNews));
