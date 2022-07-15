@@ -1,17 +1,26 @@
-import { useEffect, useReducer, useState } from "react";
+import { useEffect, useState } from "react";
 import { Routes, Route } from "react-router-dom";
+import { useSelector, useDispatch } from "react-redux";
+import { bindActionCreators } from "redux";
+import axios from "axios";
+
 import "./App.css";
-import { reducer, initialState, NewsType } from "./utils/reducers-state";
-import DispatchContext from "./DispatchContext";
-import StateContext from "./StateContext";
+
 import Nav from "./Nav";
 import Home from "component/Home";
-import axios from "axios";
 import ViewNews from "component/News/ViewNews";
 import EditNews from "component/News/EditNews";
 
+import { actionCreators } from "./state/index";
+import { NewsType } from "utils/reducers-state";
+
 const App: React.FC = () => {
-  const [state, dispatch] = useReducer(reducer, initialState);
+  const state = useSelector((state: any) => state.news);
+
+  const dispatch = useDispatch();
+
+  const { getAllNews, loader } = bindActionCreators(actionCreators, dispatch);
+
   const [id, setID] = useState(1);
 
   useEffect(() => {
@@ -20,10 +29,10 @@ const App: React.FC = () => {
       // @ts-expect-error
       const data: any = JSON.parse(localStorage.getItem("news"));
 
-      dispatch({ type: "LOADER", payload: false });
+      loader(false);
 
       //set data into state
-      dispatch({ type: "ALL-NEWS", payload: data });
+      getAllNews(data);
     } else {
       getNewsData(state.queryID);
     }
@@ -33,6 +42,7 @@ const App: React.FC = () => {
       getNewsData(state.queryID);
       setID(state.queryID);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [state.queryID, id]);
 
   const getNewsData = (id: number) => {
@@ -53,8 +63,7 @@ const App: React.FC = () => {
             published_date: newsData.published_date,
           });
         });
-
-        dispatch({ type: "LOADER", payload: false });
+        loader(false);
 
         //Set data into local storage
         localStorage.setItem("news", JSON.stringify(newNewsData));
@@ -66,18 +75,14 @@ const App: React.FC = () => {
 
   return (
     <>
-      <StateContext.Provider value={state}>
-        <DispatchContext.Provider value={dispatch}>
-          <Nav />
-          <div className="container position-relative pt-5">
-            <Routes>
-              <Route path="/" element={<Home />} />
-              <Route path="/:id/" element={<ViewNews />} />
-            </Routes>
-          </div>
-          <EditNews />
-        </DispatchContext.Provider>
-      </StateContext.Provider>
+      <Nav />
+      <div className="container position-relative pt-5">
+        <Routes>
+          <Route path="/" element={<Home />} />
+          <Route path="/:id/" element={<ViewNews />} />
+        </Routes>
+      </div>
+      <EditNews />
     </>
   );
 };

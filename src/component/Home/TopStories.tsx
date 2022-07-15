@@ -1,41 +1,45 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import TopStory from "./TopStory";
-import StateContext from "StateContext";
+import { useSelector, useDispatch } from "react-redux";
 import { NewsType } from "utils/reducers-state";
-import DispatchContext from "DispatchContext";
 import { Link } from "react-router-dom";
 import Loader from "component/Loader/Loader";
+import { actionCreators } from "../../state/index";
+import { bindActionCreators } from "redux";
 
 function TopStories() {
-  const appState = useContext(StateContext);
-  const appDispatch = useContext(DispatchContext);
+  const dispatch = useDispatch();
+  const state = useSelector((state: any) => state.news);
+  const { loader, getQueryID } = bindActionCreators(actionCreators, dispatch);
   const [firstTwoNews, setFirstTwoNews] = useState([]);
   const [allNews, setAllNews] = useState([]);
 
   const pagination = [1, 7, 30];
 
   useEffect(() => {
-    if (appState.News.length >= 1) {
-      setFirstTwoNews(appState.News.slice(0, 2));
-      setAllNews(appState.News.slice(2));
+    if (state.News.length >= 1) {
+      setFirstTwoNews(state.News.slice(0, 2));
+      setAllNews(state.News.slice(2));
     }
-  }, [appState.News, appState.loader]);
+  }, [state.News, state.loader]);
 
   const activatePaginate = (id: number) => {
     //Clear storage and make way for new set of data
     localStorage.removeItem("news");
     //activate loader
-    appDispatch({ type: "LOADER", payload: true });
+    // appDispatch({ type: "LOADER", payload: true });
+    loader(true);
     //dispatch id
-    appDispatch({ type: "QUERY-ID", payload: id });
+    getQueryID(id);
+    // appDispatch({ type: "QUERY-ID", payload: id });
   };
 
   return (
     <>
       <h1 className="text-start pb-3">Top Stories</h1>
 
-      {appState.loader && <Loader />}
-      {!appState.loader && (
+      {state.loader && <Loader />}
+      {!state.loader && (
         <div className="row mx-auto text-center">
           {firstTwoNews.map(({ title, published_date, id, metaData }) => (
             <div className="col-md-6 pt-3" key={id}>
@@ -79,7 +83,7 @@ function TopStories() {
                 <li
                   key={paginate}
                   className={
-                    appState.queryID === paginate
+                    state.queryID === paginate
                       ? "page-item active"
                       : "page-item"
                   }

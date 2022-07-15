@@ -1,34 +1,38 @@
-import React, { useContext, useEffect, useState } from "react";
-import StateContext from "StateContext";
-import DispatchContext from "DispatchContext";
+import React, { useEffect, useState } from "react";
+import { useSelector, useDispatch } from "react-redux";
+import { bindActionCreators } from "redux";
 import { NewsType } from "../../utils/reducers-state";
 import { Toast } from "utils/functions";
+import { actionCreators } from "../../state/index";
 
 function EditNews() {
-  const appState = useContext(StateContext);
-  const appDispatch = useContext(DispatchContext);
+  const state = useSelector((state: any) => state.news);
+
+  const dispatch = useDispatch();
+
+  const { getNews, getAllNews } = bindActionCreators(actionCreators, dispatch);
 
   const [news, setNews] = useState<NewsType | any>();
 
   useEffect(() => {
-    setNews(appState.viewNews);
-  }, [appState.viewNews]);
+    setNews(state.viewNews);
+  }, [state.viewNews]);
 
   const Submit = (e: any) => {
     e.preventDefault();
 
     //find index number of news from array
-    const newIndex = appState.News.indexOf(appState.viewNews);
+    const newIndex = state.News.indexOf(state.viewNews);
 
     //update news object with new data
-    const editedNews = (appState.News[Number(`${newIndex}`)] = news);
+    const editedNews = (state.News[Number(`${newIndex}`)] = news);
 
     //dispatch new data to state
-    appDispatch({ type: "ALL-NEWS", payload: appState.News });
-    appDispatch({ type: "GET-NEWS", payload: editedNews });
 
+    getAllNews(state.News);
+    getNews(editedNews);
     //store in localStorage
-    localStorage.setItem("news", JSON.stringify(appState.News));
+    localStorage.setItem("news", JSON.stringify(state.News));
 
     // @ts-expect-error
     $("#exampleModal").modal("hide");
